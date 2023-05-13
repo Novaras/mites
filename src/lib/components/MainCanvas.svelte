@@ -27,7 +27,7 @@
 			for (const mite of mites) {
 				const {x, y} = mite.position;
 				ctx.beginPath();
-				ctx.arc(x, y, 3, 0, Math.PI * 2);
+				ctx.arc(x, y, MITE_DRAW_RADIUS, 0, Math.PI * 2);
 				ctx.stroke();
 
 				if (show_labels) {
