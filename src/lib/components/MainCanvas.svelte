@@ -4,8 +4,8 @@
     import { MITE_ID_LENGTH, type LiveMite } from "$lib/logic/mite";
 
 	export const MITE_DRAW_RADIUS = 2;
-	export const font_size = 14;
-	export const font_family = 'consolas sans-serif';
+	export let font_size = 14;
+	export let font_family = 'consolas sans-serif';
 
 	export let mites: LiveMite[];
 
