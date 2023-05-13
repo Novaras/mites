@@ -1,8 +1,9 @@
-import { v4 as newUuid } from 'uuid';
+import { nanoid } from "nanoid";
 import Vec2, { type Vec2Like } from "./vec2";
-import { randIntBetween } from './util';
 
-export type MiteLike = LiveMite | { id?: string, position?: Vec2Like, velocity: Vec2Like, age?: number }
+export type MiteLike = LiveMite | { id?: string, position?: Vec2Like, velocity: Vec2Like, age?: number };
+
+export const MITE_ID_LENGTH = 10;
 
 export class LiveMite {
 	position: Vec2;
@@ -35,7 +36,7 @@ export class LiveMite {
 			return mite_like.clone();
 		} else {
 			return new LiveMite(
-				mite_like.id ?? newUuid(),
+				mite_like.id ?? nanoid(MITE_ID_LENGTH),
 				mite_like.position ?? new Vec2(),
 				mite_like.velocity ?? new Vec2(),
 				mite_like.age ?? 0,
