@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+	background-color: #181a1b;
+	color: #e8e6e3;
+	font-family: "Cascadia Code", ui-sans-serif, system-ui, Roboto;
+}
+
+.btn {
+	@apply py-2 px-4 bg-blue-500 text-white font-semibold rounded-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+}
