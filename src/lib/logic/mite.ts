@@ -4,6 +4,7 @@ import Vec2, { type Vec2Like } from "./vec2";
 export type MiteLike = LiveMite | { id?: string, position?: Vec2Like, velocity: Vec2Like, age?: number };
 
 export const MITE_ID_LENGTH = 10;
+export const MITE_MAX_SPEED = 5;
 
 export class LiveMite {
 	position: Vec2;
@@ -56,5 +57,12 @@ export class LiveMite {
 		this.age += 1;
 		// update pos based on vel
 		this.position.add(this.velocity);
+
+		const sign = () => Math.random() < 0.5 ? -1 : 1;
+		const velocity_delta = [
+			this.velocity.x + Math.random() * 2 * sign(),
+			this.velocity.y + Math.random() * 2 * sign()
+		].map(v => Math.abs(v) < MITE_MAX_SPEED ? v : MITE_MAX_SPEED) as [number, number];
+		this.velocity.set(velocity_delta);
 	}
 }

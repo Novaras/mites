@@ -23,6 +23,12 @@ export default class Vec2 {
 		this.y -= vec2.y;
 	}
 
+	set(value: Vec2Like) {
+		const vec2 = Vec2.toVec2(value);
+		this.x = vec2.x;
+		this.y = vec2.y;
+	}
+
 	// ===
 
 	static toVec2(vec_like: Vec2Like) {
