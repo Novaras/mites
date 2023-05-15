@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import { clearContext } from "$lib/logic/drawing";
-    import { MITE_ID_LENGTH, type LiveMite } from "$lib/logic/mite";
+    import { MITE_ID_LENGTH, type Mite } from "$lib/logic/mite";
 
 	export const MITE_DRAW_RADIUS = 1;
 	export let font_size = 14;
 	export let font_family = 'consolas sans-serif';
 
-	export let mites: LiveMite[];
+	export let mites: Mite[];
 
 	// === execution; main (logic), rendering... ===
 	const main = () => {
@@ -68,8 +68,12 @@
 		const Vec2 = (await import("$lib/logic/vec2")).default;
 		(window as any).Vec2 = Vec2;
 
-		const LiveMite = (await import("$lib/logic/mite")).LiveMite;
-		(window as any).LiveMite = LiveMite;
+		const mite_lib = await import("$lib/logic/mite");
+		for (const [name, exported] of Object.entries(mite_lib)) {
+			if (typeof exported === 'function') {
+				(window as any)[name] = exported;
+			}
+		}
 	});
 </script>
 

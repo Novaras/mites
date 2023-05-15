@@ -4,7 +4,7 @@
 	import MainCanvas from "$lib/components/MainCanvas.svelte";
 	import Controls from '$lib/components/Controls.svelte';
 
-	import { LiveMite, MITE_ID_LENGTH } from "$lib/logic/mite";
+	import { Drone, MITE_ID_LENGTH } from "$lib/logic/mite";
     import { randIntBetween } from "$lib/logic/util";
 
 	let paused = true;
@@ -20,7 +20,7 @@
 
 	$: some_mites = Array.from(
 		{ length: mite_count },
-		() => LiveMite.from({
+		() => new Drone({
 			id: nanoid(MITE_ID_LENGTH),
 			position: { x: randIntBetween(0, canvas_dim.width), y: randIntBetween(0, canvas_dim.height) },
 			velocity: { x: Math.random() * 5, y: Math.random() * 5 },
