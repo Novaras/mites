@@ -3,7 +3,7 @@
 	import { clearContext } from "$lib/logic/drawing";
     import { MITE_ID_LENGTH, type LiveMite } from "$lib/logic/mite";
 
-	export const MITE_DRAW_RADIUS = 2;
+	export const MITE_DRAW_RADIUS = 1;
 	export let font_size = 14;
 	export let font_family = 'consolas sans-serif';
 
@@ -13,6 +13,8 @@
 	const main = () => {
 		for (const mite of mites) {
 			mite.update();
+			mite.position.add({ x: width, y: height });
+			mite.position.modulo({ x: width, y: height });
 		}
 	};
 	const render: FrameRequestCallback = () => {
@@ -53,7 +55,7 @@
 	export const getCanvas = () => canvas;
 
 	// === lifecycle ===
-	onMount(() => {
+	onMount(async () => {
 		setInterval(() => {
 			if (!paused) {
 				main();
@@ -62,6 +64,12 @@
 				requestAnimationFrame(render);
 			}
 		}, refreshIntervalMS);
+
+		const Vec2 = (await import("$lib/logic/vec2")).default;
+		(window as any).Vec2 = Vec2;
+
+		const LiveMite = (await import("$lib/logic/mite")).LiveMite;
+		(window as any).LiveMite = LiveMite;
 	});
 </script>
 

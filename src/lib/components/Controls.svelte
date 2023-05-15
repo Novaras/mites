@@ -7,7 +7,7 @@
 	export let show_labels: boolean | undefined;
 </script>
 
-<div id="controls-or-something" class="flex flex-col items-start justify-self-start gap-4">
+<div id="controls-or-something" class="flex flex-col items-start gap-4">
 	{#if paused !== undefined}
 		<label for="paused">Paused? <input type="checkbox" id="paused" bind:checked={paused}>
 			{#if paused}

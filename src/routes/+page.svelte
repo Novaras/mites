@@ -7,16 +7,16 @@
 	import { LiveMite, MITE_ID_LENGTH } from "$lib/logic/mite";
     import { randIntBetween } from "$lib/logic/util";
 
-	let paused = false;
+	let paused = true;
 	let show_labels = false;
 
 	let main_canvas: MainCanvas;
 	const canvas_dim = {
-		width: 900,
-		height: 700,
+		width: 1400,
+		height: 900,
 	};
 
-	let mite_count = 5;
+	let mite_count = 1;
 
 	$: some_mites = Array.from(
 		{ length: mite_count },
@@ -29,16 +29,18 @@
 
 </script>
 
-<main class="grid grid-rows-2 grid-cols-2 justify-items-center">
-	<MainCanvas bind:this={main_canvas}
+<main class="mx-8 my-4 grid grid-rows-2 grid-cols-2 justify-items-center gap-4">
+	<div class="col-span-2">
+		<MainCanvas bind:this={main_canvas}
 				mites={some_mites}
 				refreshIntervalMS={100}
 				paused={paused}
 				show_labels={show_labels}
 				{...canvas_dim} />
+	</div>
+	<div id="info-etc">Probably put info down here like tables or graphs etc.</div>
 	<Controls bind:paused={paused}
 			  bind:show_labels={show_labels}
 			  bind:mite_count={mite_count}
 			  canvas={main_canvas} />
-	<div id="info-etc" class="col-span-2">Probably put info down here like tables or graphs etc.</div>
 </main>
