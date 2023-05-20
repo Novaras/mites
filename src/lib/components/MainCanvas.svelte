@@ -12,7 +12,9 @@
 	// === execution; main (logic), rendering... ===
 	const main = () => {
 		for (const mite of mites) {
-			mite.update();
+			mite.behavior();
+
+			// here we wrap the position around for a pacman-like effect
 			mite.position.add({ x: width, y: height });
 			mite.position.modulo({ x: width, y: height });
 		}

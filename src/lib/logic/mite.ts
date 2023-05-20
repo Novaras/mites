@@ -25,21 +25,20 @@ export abstract class Mite {
 	}
 
 	update() {
-		// incr age
-		this.age += 1;
+		this.behavior();
+
 		// update pos based on vel
+		this.velocity.modulo(MITE_MAX_SPEED);
 		this.position.add(this.velocity);
+
+		this.age += 1;
 	}
+
+	abstract behavior(): void;
 }
 
 export class Drone extends Mite {
-	constructor(mite_like?: MiteLike) {
-		super(mite_like);
-	}
-
-	update() {
-		super.update();
-
+	behavior() {
 		const negative_threshold = 0.5;
 		const sign = () => Math.random() < negative_threshold ? -1 : 1;
 		const velocity_delta = Vec2.from([
@@ -48,6 +47,11 @@ export class Drone extends Mite {
 		]);
 
 		this.velocity.add(velocity_delta);
-		this.velocity.modulo(MITE_MAX_SPEED);
+	}
+}
+
+export class Queen extends Mite {
+	behavior() {
+		// --
 	}
 }
