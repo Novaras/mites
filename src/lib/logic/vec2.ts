@@ -1,4 +1,4 @@
-export type Vec2Like = Vec2|[number, number]|{ x: number, y: number }
+export type Vec2Like = Vec2 | [number, number] | { x: number, y: number }
 
 export default class Vec2 {
 	x: number;
@@ -9,18 +9,36 @@ export default class Vec2 {
 		this.y = y;
 	}
 
-	add(other: Vec2Like) {
+	add(other: Vec2Like | number) {
 		const vec2 = Vec2.from(other);
-		
+
 		this.x += vec2.x;
 		this.y += vec2.y;
 	}
 
-	subtract(other: Vec2Like) {
+	subtract(other: Vec2Like | number) {
 		const vec2 = Vec2.from(other);
 
 		this.x -= vec2.x;
 		this.y -= vec2.y;
+	}
+
+	multiply(other: Vec2Like | number) {
+		const vec2 = Vec2.from(other);
+
+		this.x *= vec2.x;
+		this.y *= vec2.y;
+	}
+
+	divide(other: Vec2Like | number) {
+		const vec2 = Vec2.from(other);
+
+		this.x /= vec2.x;
+		this.y /= vec2.y;
+	}
+
+	get magnitude() {
+		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
 	}
 
 	modulo(value: Vec2Like | number) {
@@ -30,18 +48,18 @@ export default class Vec2 {
 		this.y = this.y % mod_vec.y;
 	}
 
-	map(map_fn: (v: number, k: 'x'|'y', inst: Vec2) => number) {
+	map(map_fn: (v: number, k: 'x' | 'y', inst: Vec2) => number) {
 		this.x = map_fn(this.x, 'x', this);
 		this.y = map_fn(this.y, 'y', this);
 	}
 
-	forEach(callback: (v: number, k: 'x'|'y', inst: Vec2) => void) {
+	forEach(callback: (v: number, k: 'x' | 'y', inst: Vec2) => void) {
 		for (const axis of ['x', 'y'] as const) {
 			callback(this[axis], axis, this);
 		}
 	}
 
-	set(value: Vec2Like) {
+	set(value: Vec2Like | number) {
 		const vec2 = Vec2.from(value);
 		this.x = vec2.x;
 		this.y = vec2.y;
@@ -49,13 +67,15 @@ export default class Vec2 {
 
 	// ===
 
-	from(vec_like: Vec2Like) {
+	from(vec_like: Vec2Like | number) {
 		const pos = Vec2.from(vec_like);
 		this.x = pos.x;
 		this.y = pos.y;
 	}
 
-	static from(vec_like: Vec2Like) {
+	static from(vec_like: Vec2Like | number) {
+		if (typeof vec_like === "number") return new Vec2(vec_like, vec_like);
+
 		if (vec_like instanceof Vec2) {
 			return vec_like.clone();
 		}

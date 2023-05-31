@@ -1,53 +1,36 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { clearContext } from "$lib/logic/drawing";
-  import { MITE_ID_LENGTH, type Mite } from "$lib/logic/mite";
+  import { onMount, createEventDispatcher } from "svelte";
+  import { DRAW_FNS, clearContext, CANVAS_DRAW_OPTION_DEFAULTS, type CanvasDrawOptions } from "$lib/logic/drawing";
+  import { Drone, Mite, Queen } from "$lib/logic/mite";
 
-  export const MITE_DRAW_RADIUS = 1;
-  export let font_size = 14;
-  export let font_family = "consolas sans-serif";
+  import { mite_manager } from "$lib/stores/mite-manager";
+  import { resource_manager } from "$lib/stores/resource-manager";
 
-  export let mites: Mite[];
+  const dispatch = createEventDispatcher();
 
-  // === execution; main (logic), rendering... ===
-  const main = () => {
-    for (const mite of mites) {
-      mite.update();
+  export let draw_options = CANVAS_DRAW_OPTION_DEFAULTS as CanvasDrawOptions;
 
-      // here we wrap the position around for a pacman-like effect
-      mite.position.add({ x: width, y: height });
-      mite.position.modulo({ x: width, y: height });
-    }
-  };
+  let draw_lib: ReturnType<typeof DRAW_FNS>|null = null;
   const render: FrameRequestCallback = () => {
-    // draw
-    const ctx = canvas.getContext(`2d`);
+		// draw
+		const ctx = canvas.getContext(`2d`);
 
-    if (ctx) {
-      clearContext(ctx);
-      ctx.fillStyle = "white";
-      ctx.strokeStyle = "white";
-      ctx.font = `${font_size}px ${font_family}`;
-      for (const mite of mites) {
-        const { x, y } = mite.position;
-        ctx.beginPath();
-        ctx.arc(x, y, MITE_DRAW_RADIUS, 0, Math.PI * 2);
-        ctx.stroke();
+		// !!!! CURRENTLY REFACTORING BELOW CODE TO A `Drawable` BASE CLASS WHICH DRAWABLE THINGS CAN EXTEND
+		// issue: needs access to the rendering context
 
-        if (show_labels) {
-          const [dx, dy] = [x - (MITE_ID_LENGTH / 2) * (font_size / 2), y - 8];
-          ctx.fillText(mite.id, dx, dy);
-        }
-      }
-    }
+		if (ctx) {
+			draw_lib = draw_lib ?? DRAW_FNS(ctx);
+			clearContext(ctx);
+			ctx.fillStyle = "white";
+			ctx.strokeStyle = "white";
+			ctx.font = `${draw_options.font_size}px ${draw_options.font_family}`;
+			for (const mite of mite_manager.entities) {
+				draw_lib[typeof Mite](mite, draw_options);
+			}
+
+			dispatch("frameRendered");
+		}
   };
-
-  // === pausing ===
-  export let paused: boolean;
-  export const advanceSim = main;
-
-  // === labels ===
-  export let show_labels: boolean;
 
   // === canvas options ===
   export let refreshIntervalMS = 50;
@@ -59,9 +42,6 @@
   // === lifecycle ===
   onMount(async () => {
     setInterval(() => {
-      if (!paused) {
-        main();
-      }
       if (canvas) {
         requestAnimationFrame(render);
       }
