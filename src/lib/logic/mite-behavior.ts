@@ -1,10 +1,10 @@
-import { Drone, type Mite, type Queen } from "./mite";
-import type { MiteManager } from "./mite-manager";
+import type { Manager } from "./manager";
+import { Drone, type Mite } from "./mite";
 import Vec2 from "./vec2";
 
 export type MiteBehavior = {
     cost: number,
-    exec: (mite: Mite, manager: MiteManager) => void,
+    exec: (mite: Mite, manager: Manager<Mite>) => void,
 };
 
 export const MITE_BEHAVIORS = {
@@ -26,7 +26,7 @@ export const MITE_BEHAVIORS = {
     },
     spawn_drone: {
         cost: 20,
-        exec: (queen: Mite, manager: MiteManager) => {
+        exec: (queen: Mite, manager: Manager<Mite>) => {
             console.log(`queen ${queen.id} spawning drone!`);
             const drone = new Drone({
                 position: queen.position.clone()
