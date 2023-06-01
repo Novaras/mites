@@ -24,9 +24,14 @@
 		}));
 	})
 
+	const update_interval_ms = 50;
 	const updateMites = () => {
 		!paused && mite_manager.update();
 	}
+
+	onMount(() => {
+		setInterval(updateMites, update_interval_ms);
+	});
 
 	console.log(mite_manager);
 
@@ -35,10 +40,8 @@
 <main class="mx-8 my-4 grid grid-rows-2 grid-cols-2 justify-items-center gap-4">
 	<div class="col-span-2">
 		<MainCanvas bind:this={main_canvas}
-					refreshIntervalMS={100}
 					draw_options={{ show_dead, show_labels }}
-					{...canvas_dim}
-					on:frameRendered={updateMites} />
+					{...canvas_dim} />
 	</div>
 	<div id="info-etc">Probably put info down here like tables or graphs etc.</div>
 	<Controls bind:paused={paused}

@@ -1,22 +1,23 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from "svelte";
+  import { onMount } from "svelte";
   import { DRAW_FNS, clearContext, CANVAS_DRAW_OPTION_DEFAULTS, type CanvasDrawOptions } from "$lib/logic/drawing";
-  import { Drone, Mite, Queen } from "$lib/logic/mite";
+  import { Mite } from "$lib/logic/mite";
 
   import { mite_manager } from "$lib/stores/mite-manager";
-  import { resource_manager } from "$lib/stores/resource-manager";
-
-  const dispatch = createEventDispatcher();
+  // import { resource_manager } from "$lib/stores/resource-manager";
 
   export let draw_options = CANVAS_DRAW_OPTION_DEFAULTS as CanvasDrawOptions;
+
+  // === canvas options ===
+  export let width = 700;
+  export let height = 700;
+  let canvas: HTMLCanvasElement;
+  export const getCanvas = () => canvas;
 
   let draw_lib: ReturnType<typeof DRAW_FNS>|null = null;
   const render: FrameRequestCallback = () => {
 		// draw
 		const ctx = canvas.getContext(`2d`);
-
-		// !!!! CURRENTLY REFACTORING BELOW CODE TO A `Drawable` BASE CLASS WHICH DRAWABLE THINGS CAN EXTEND
-		// issue: needs access to the rendering context
 
 		if (ctx) {
 			draw_lib = draw_lib ?? DRAW_FNS(ctx);
@@ -28,24 +29,15 @@
 				draw_lib[typeof Mite](mite, draw_options);
 			}
 
-			dispatch("frameRendered");
-		}
+			requestAnimationFrame(render);
+    }
   };
-
-  // === canvas options ===
-  export let refreshIntervalMS = 50;
-  export let width = 700;
-  export let height = 700;
-  let canvas: HTMLCanvasElement;
-  export const getCanvas = () => canvas;
 
   // === lifecycle ===
   onMount(async () => {
-    setInterval(() => {
-      if (canvas) {
-        requestAnimationFrame(render);
-      }
-    }, refreshIntervalMS);
+    if (canvas) {
+      requestAnimationFrame(render);
+    }
 
     const Vec2 = (await import("$lib/logic/vec2")).default;
     (window as any).Vec2 = Vec2;
